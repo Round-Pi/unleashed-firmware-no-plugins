@@ -89,6 +89,7 @@ static void clock_render_callback(Canvas* const canvas, void* ctx) {
 
         if(state->time_format == LocaleTimeFormat12h)
             canvas_draw_str_aligned(canvas, 65, 12, AlignCenter, AlignCenter, meridian_string);
+            // canvas_draw_str_aligned(canvas, 120, 22, AlignRight, AlignCenter, meridian_string);
     }
     if(timer_running) {
         elements_button_center(canvas, "Stop");
