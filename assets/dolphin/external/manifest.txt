@@ -97,7 +97,7 @@ Min butthurt: 0
 Max butthurt: 12
 Min level: 2
 Max level: 3
-Weight: 4
+Weight: 0
 
 Name: L2_Furippa2_128x64
 Min butthurt: 0

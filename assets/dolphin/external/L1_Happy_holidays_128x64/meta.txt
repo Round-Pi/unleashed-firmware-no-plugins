@@ -16,7 +16,7 @@ Bubble slots: 1
 Slot: 0
 X: 11
 Y: 19
-Text:  HAPPY\nHOLIDAYS!
+Text: I love hot\nchocolate...
 AlignH: Right
 AlignV: Center
 StartFrame: 22

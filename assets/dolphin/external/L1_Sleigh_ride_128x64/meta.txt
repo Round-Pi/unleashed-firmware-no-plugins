@@ -16,7 +16,7 @@ Bubble slots: 1
 Slot: 0
 X: 21
 Y: 25
-Text: AAAAaAAAAHHh!!
+Text: Yipppppeeeeeeee!!
 AlignH: Right
 AlignV: Bottom
 StartFrame: 30
