@@ -44,10 +44,6 @@ static void clock_render_callback(Canvas* const canvas, void* ctx) {
             time_string,
             TIME_LEN,
             CLOCK_TIME_FORMAT,
-<<<<<<< HEAD
-            // pm ? curr_dt.hour - 12 : curr_dt.hour,
-=======
->>>>>>> dev
             pm ? curr_dt.hour - 12 : (am12 ? 12 : curr_dt.hour),
             curr_dt.minute,
             curr_dt.second);

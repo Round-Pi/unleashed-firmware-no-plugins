@@ -28,19 +28,8 @@ const uint32_t auto_lock_delay_value[AUTO_LOCK_DELAY_COUNT] =
 
 #define BATTERY_VIEW_COUNT 6
 
-<<<<<<< HEAD
-const char* const battery_view_count_text[BATTERY_VIEW_COUNT] = {
-    "Bar",
-    "%",
-    "Inv. %",
-    "Retro 3",
-    "Retro 5",
-    "Bar %"
-};
-=======
 const char* const battery_view_count_text[BATTERY_VIEW_COUNT] =
     {"Bar", "%", "Inv. %", "Retro 3", "Retro 5", "Bar %"};
->>>>>>> dev
 
 const uint32_t displayBatteryPercentage_value[BATTERY_VIEW_COUNT] = {
     DISPLAY_BATTERY_BAR,
@@ -48,12 +37,7 @@ const uint32_t displayBatteryPercentage_value[BATTERY_VIEW_COUNT] = {
     DISPLAY_BATTERY_INVERTED_PERCENT,
     DISPLAY_BATTERY_RETRO_3,
     DISPLAY_BATTERY_RETRO_5,
-<<<<<<< HEAD
-    DISPLAY_BATTERY_BAR_PERCENT
-};
-=======
     DISPLAY_BATTERY_BAR_PERCENT};
->>>>>>> dev
 
 static void desktop_settings_scene_start_var_list_enter_callback(void* context, uint32_t index) {
     DesktopSettingsApp* app = context;
