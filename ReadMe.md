@@ -1,8 +1,6 @@
-<h3 align="center">
 <a href="https://github.com/DarkFlippers/unleashed-firmware">
-<img src="https://user-images.githubusercontent.com/10697207/186202043-26947e28-b1cc-459a-8f20-ffcc7fc0c71c.png" align="center" alt="fzCUSTOM" border="0">
+<img src="https://user-images.githubusercontent.com/10697207/186202043-26947e28-b1cc-459a-8f20-ffcc7fc0c71c.png" align="right" alt="fzCUSTOM" border="0" style="width: 20em; min-width: 50px;">
 </a>
-</h3>
 
 ### Welcome to the Flipper Zero Unleashed Firmware repo! 
 
@@ -18,13 +16,6 @@ Please help us implement emulation for all Sub-GHz dynamic (rolling code) protoc
 
 ### This software is for experimental purposes only and is not meant for any illegal activity/purposes. <br> We do not condone illegal activity and strongly encourage keeping transmissions to legal/valid uses allowed by law. <br> Also, this software is made without any support from Flipper Devices and is in no way related to the official devs. 
 
-<br>
-Our Discord Community:
-<br>
-<a href="https://discord.unleashedflip.com"><img src="https://discordapp.com/api/guilds/937479784148115456/widget.png?style=banner4" alt="Unofficial Discord Community" target="_blank"></a>
-
-<br>
-<br>
 <br>
 
 ## Dev builds
