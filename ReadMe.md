@@ -40,6 +40,7 @@ Please help us implement emulation for all Sub-GHz dynamic (rolling code) protoc
 * Customizable Flipper name
 * Sub-GHz -> Press OK in frequency analyzer to use detected frequency in Read modes
 * Sub-GHz -> Long press OK button in Sub-GHz Frequency analyzer to switch to Read menu 
+* Sub-GHz -> External CC1101 module support
 * Other small fixes and changes throughout
 * See other changes in changelog and in readme below
 
@@ -140,6 +141,7 @@ Games:
 ### Other changes
 
 - BadUSB -> Keyboard layouts [(by rien > dummy-decoy)](https://github.com/dummy-decoy/flipperzero-firmware/tree/dummy_decoy/bad_usb_keyboard_layout)
+- Sub-GHz -> External CC1101 module support - [(by quen0n)](https://github.com/DarkFlippers/unleashed-firmware/pull/307)
 - Sub-GHz -> New frequency analyzer - [(by ClusterM)](https://github.com/DarkFlippers/unleashed-firmware/pull/43)
 - Sub-GHz -> Detect RAW feature - [(by perspecdev)](https://github.com/RogueMaster/flipperzero-firmware-wPlugins/pull/152)
 - Sub-GHz -> Save last used frequency [(by derskythe)](https://github.com/DarkFlippers/unleashed-firmware/pull/77)
@@ -151,6 +153,8 @@ Games:
 ## [- How to install firmware](https://github.com/DarkFlippers/unleashed-firmware/blob/dev/documentation/HowToInstall.md)
 
 ## [- How to build firmware](https://github.com/DarkFlippers/unleashed-firmware/blob/dev/documentation/HowToBuild.md)
+
+## [- How to connect external CC1101 module](https://github.com/quen0n/flipperzero-ext-cc1101)
 
 ## [- BadUSB: how to add new keyboard layouts](https://github.com/dummy-decoy/flipperzero_badusb_kl)
 
