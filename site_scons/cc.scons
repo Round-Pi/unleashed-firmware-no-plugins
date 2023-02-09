@@ -24,6 +24,7 @@ ENV.AppendUnique(
         "-Wextra",
         "-Werror",
         "-Wno-address-of-packed-member",
+        "-Wno-unused-parameter",
         "-Wredundant-decls",
         "-Wdouble-promotion",
         "-fdata-sections",

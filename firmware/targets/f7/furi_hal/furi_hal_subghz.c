@@ -1,5 +1,5 @@
-#include "furi_hal_subghz.h"
-#include "furi_hal_subghz_configs.h"
+#include <furi_hal_subghz.h>
+#include <furi_hal_subghz_configs.h>
 
 #include <furi_hal_version.h>
 #include <furi_hal_rtc.h>
@@ -22,6 +22,14 @@
 
 static uint32_t furi_hal_subghz_debug_gpio_buff[2];
 static bool last_OTG_state = false;
+
+/* DMA Channels definition */
+#define SUBGHZ_DMA DMA2
+#define SUBGHZ_DMA_CH1_CHANNEL LL_DMA_CHANNEL_1
+#define SUBGHZ_DMA_CH2_CHANNEL LL_DMA_CHANNEL_2
+#define SUBGHZ_DMA_CH1_IRQ FuriHalInterruptIdDma2Ch1
+#define SUBGHZ_DMA_CH1_DEF SUBGHZ_DMA, SUBGHZ_DMA_CH1_CHANNEL
+#define SUBGHZ_DMA_CH2_DEF SUBGHZ_DMA, SUBGHZ_DMA_CH2_CHANNEL
 
 volatile FuriHalSubGhz furi_hal_subghz = {
     .state = SubGhzStateInit,
@@ -536,7 +544,7 @@ void furi_hal_subghz_start_async_rx(FuriHalSubGhzCaptureCallback callback, void*
     TIM_InitStruct.Prescaler = 64 - 1;
     TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
     TIM_InitStruct.Autoreload = 0x7FFFFFFE;
-    TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV4;
+    TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV4; // Clock division for capture filter
     LL_TIM_Init(TIM2, &TIM_InitStruct);
 
     // Timer: advanced
@@ -554,6 +562,10 @@ void furi_hal_subghz_start_async_rx(FuriHalSubGhzCaptureCallback callback, void*
 
     // Switch to RX
     furi_hal_subghz_rx();
+
+    // Not used with current implementation
+    // Clear the variable after the end of the session
+    //furi_hal_subghz_capture_delta_duration = 0;
 }
 
 void furi_hal_subghz_stop_async_rx() {
@@ -605,8 +617,8 @@ static void furi_hal_subghz_async_tx_refill(uint32_t* buffer, size_t samples) {
             *buffer = 0;
             buffer++;
             samples--;
-            LL_DMA_DisableIT_HT(DMA1, LL_DMA_CHANNEL_1);
-            LL_DMA_DisableIT_TC(DMA1, LL_DMA_CHANNEL_1);
+            LL_DMA_DisableIT_HT(SUBGHZ_DMA_CH1_DEF);
+            LL_DMA_DisableIT_TC(SUBGHZ_DMA_CH1_DEF);
             LL_TIM_EnableIT_UPDATE(TIM2);
             break;
         } else {
@@ -647,17 +659,22 @@ static void furi_hal_subghz_async_tx_refill(uint32_t* buffer, size_t samples) {
 
 static void furi_hal_subghz_async_tx_dma_isr() {
     furi_assert(furi_hal_subghz.state == SubGhzStateAsyncTx);
-    if(LL_DMA_IsActiveFlag_HT1(DMA1)) {
-        LL_DMA_ClearFlag_HT1(DMA1);
+
+#if SUBGHZ_DMA_CH1_CHANNEL == LL_DMA_CHANNEL_1
+    if(LL_DMA_IsActiveFlag_HT1(SUBGHZ_DMA)) {
+        LL_DMA_ClearFlag_HT1(SUBGHZ_DMA);
         furi_hal_subghz_async_tx_refill(
             furi_hal_subghz_async_tx.buffer, API_HAL_SUBGHZ_ASYNC_TX_BUFFER_HALF);
     }
-    if(LL_DMA_IsActiveFlag_TC1(DMA1)) {
-        LL_DMA_ClearFlag_TC1(DMA1);
+    if(LL_DMA_IsActiveFlag_TC1(SUBGHZ_DMA)) {
+        LL_DMA_ClearFlag_TC1(SUBGHZ_DMA);
         furi_hal_subghz_async_tx_refill(
             furi_hal_subghz_async_tx.buffer + API_HAL_SUBGHZ_ASYNC_TX_BUFFER_HALF,
             API_HAL_SUBGHZ_ASYNC_TX_BUFFER_HALF);
     }
+#else
+#error Update this code. Would you kindly?
+#endif
 }
 
 static void furi_hal_subghz_async_tx_timer_isr() {
@@ -666,7 +683,7 @@ static void furi_hal_subghz_async_tx_timer_isr() {
         if(LL_TIM_GetAutoReload(TIM2) == 0) {
             if(furi_hal_subghz.state == SubGhzStateAsyncTx) {
                 furi_hal_subghz.state = SubGhzStateAsyncTxLast;
-                LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_1);
+                LL_DMA_DisableChannel(SUBGHZ_DMA_CH1_DEF);
             } else if(furi_hal_subghz.state == SubGhzStateAsyncTxLast) {
                 furi_hal_subghz.state = SubGhzStateAsyncTxEnd;
                 //forcibly pulls the pin to the ground so that there is no carrier
@@ -715,11 +732,11 @@ bool furi_hal_subghz_start_async_tx(FuriHalSubGhzAsyncTxCallback callback, void*
     dma_config.NbData = API_HAL_SUBGHZ_ASYNC_TX_BUFFER_FULL;
     dma_config.PeriphRequest = LL_DMAMUX_REQ_TIM2_UP;
     dma_config.Priority = LL_DMA_MODE_NORMAL;
-    LL_DMA_Init(DMA1, LL_DMA_CHANNEL_1, &dma_config);
-    furi_hal_interrupt_set_isr(FuriHalInterruptIdDma1Ch1, furi_hal_subghz_async_tx_dma_isr, NULL);
-    LL_DMA_EnableIT_TC(DMA1, LL_DMA_CHANNEL_1);
-    LL_DMA_EnableIT_HT(DMA1, LL_DMA_CHANNEL_1);
-    LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_1);
+    LL_DMA_Init(SUBGHZ_DMA_CH1_DEF, &dma_config);
+    furi_hal_interrupt_set_isr(SUBGHZ_DMA_CH1_IRQ, furi_hal_subghz_async_tx_dma_isr, NULL);
+    LL_DMA_EnableIT_TC(SUBGHZ_DMA_CH1_DEF);
+    LL_DMA_EnableIT_HT(SUBGHZ_DMA_CH1_DEF);
+    LL_DMA_EnableChannel(SUBGHZ_DMA_CH1_DEF);
 
     // Configure TIM2
     LL_TIM_InitTypeDef TIM_InitStruct = {0};
@@ -776,9 +793,9 @@ bool furi_hal_subghz_start_async_tx(FuriHalSubGhzAsyncTxCallback callback, void*
     dma_config.NbData = 2;
     dma_config.PeriphRequest = LL_DMAMUX_REQ_TIM2_UP;
     dma_config.Priority = LL_DMA_PRIORITY_VERYHIGH;
-    LL_DMA_Init(DMA1, LL_DMA_CHANNEL_2, &dma_config);
-    LL_DMA_SetDataLength(DMA1, LL_DMA_CHANNEL_2, 2);
-    LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_2);
+    LL_DMA_Init(SUBGHZ_DMA_CH2_DEF, &dma_config);
+    LL_DMA_SetDataLength(SUBGHZ_DMA_CH2_DEF, 2);
+    LL_DMA_EnableChannel(SUBGHZ_DMA_CH2_DEF);
 
     return true;
 }
@@ -795,9 +812,8 @@ void furi_hal_subghz_stop_async_tx() {
 
     // Shutdown radio
     furi_hal_subghz_idle();
-#ifdef FURI_HAL_SUBGHZ_TX_GPIO
-    furi_hal_gpio_write(&FURI_HAL_SUBGHZ_TX_GPIO, false);
-#endif
+
+    furi_hal_gpio_write(furi_hal_subghz.cc1101_g0_pin, false);
 
     // Deinitialize Timer
     FURI_CRITICAL_ENTER();
@@ -805,17 +821,14 @@ void furi_hal_subghz_stop_async_tx() {
     furi_hal_interrupt_set_isr(FuriHalInterruptIdTIM2, NULL, NULL);
 
     // Deinitialize DMA
-    LL_DMA_DeInit(DMA1, LL_DMA_CHANNEL_1);
+    LL_DMA_DeInit(SUBGHZ_DMA_CH1_DEF);
 
-    furi_hal_interrupt_set_isr(FuriHalInterruptIdDma1Ch1, NULL, NULL);
+    furi_hal_interrupt_set_isr(SUBGHZ_DMA_CH1_IRQ, NULL, NULL);
 
     // Deinitialize GPIO
     furi_hal_gpio_init(furi_hal_subghz.cc1101_g0_pin, GpioModeAnalog, GpioPullNo, GpioSpeedLow);
 
-    // Stop debug
-    if(furi_hal_subghz_stop_debug()) {
-        LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_2);
-    }
+    LL_DMA_DisableChannel(SUBGHZ_DMA_CH2_DEF);
 
     FURI_CRITICAL_EXIT();
 
