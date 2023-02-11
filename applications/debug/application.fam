@@ -1,0 +1,6 @@
+App(
+    appid="debug_apps",
+    name="Basic debug apps bundle",
+    apptype=FlipperAppType.METAPACKAGE,
+    provides=[],
+)
