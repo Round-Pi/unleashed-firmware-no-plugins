@@ -64,4 +64,7 @@ PVS-Studio.log
 
 .gdbinit
 
+applications/debug
+applications/examples
+applications/external
 applications/plugins
