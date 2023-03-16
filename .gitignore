@@ -64,7 +64,13 @@ PVS-Studio.log
 
 .gdbinit
 
-applications/debug
-applications/examples
-applications/external
-applications/plugins
+applications/debug/
+!applications/debug/application.fam
+applications/examples/
+!applications/examples/application.fam
+!applications/examples/README.md
+applications/external/
+!applications/external/application.fam
+applications/plugins/
+applications_user/
+!applications_user/README.md
