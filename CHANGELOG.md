@@ -1,14 +1,14 @@
 ### New changes 
-* NFC: Temp fix for Detect reader not collecting nonces
-* Desktop: Temp fix for old backlight bug when locking by holding up arrow
-* IR: Add Sharp and Vizio to Universal TV remote
-* BLE Info: Show version instead of branch
-* Plugins: Add new game - Bomberduck (by @leo-need-more-coffee | PR #450)
-* Plugins: Fix `SWD Probe` plugin GPIO pins state reset on exit
-* Plugins: Bluetooth Remote - new UI (by @krolchonok | PR #447)
-* Plugins: Update **TOTP (Authenticator)** [(by akopachov)](https://github.com/akopachov/flipper-zero_authenticator)
-* Docs: Update HowToInstall (by @krolchonok | PR #443)
-* OFW PR 2627: Add HID mouse auto-clicker (by @rwl4)
+* Extra pack: Some app fixes
+* OFW: ble: attempt to handle hardfaulted c2
+* OFW: Add Mfkey32 application
+* OFW: Added DigitalSequence and PulseReader
+* OFW: Debug: revert cortex debug to lxml and drop DWT **(reapply your VSCode launch.json from example folder)**
+* OFW: furi_crash: added C2 status; added fw-version gdb command
+* OFW: Removed STM32CubeWB module
+* OFW: API version in UI
+* OFW: ufbt: deploying sample ufbt automation for new apps; added `source "ufbt -s env"` for toolchain access
+* OFW: Fix storage.py exist_dir logic
 
 #### [🎲 Download latest extra apps pack](https://github.com/xMasterX/all-the-plugins/archive/refs/heads/main.zip)
 
