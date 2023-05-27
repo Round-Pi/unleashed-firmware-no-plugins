@@ -15,8 +15,8 @@ Bubble slots: 1
 
 Slot: 0
 X: 71
-Y: 28
-Text: I am busy rn
+Y: 21
+Text: I am busy\nright now
 AlignH: Left
 AlignV: Center
 StartFrame: 10
